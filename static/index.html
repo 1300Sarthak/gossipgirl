@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gossip Girl</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --gold: #fff8b5;
+  --gold-bright: #ffe800;
+  --bg: #0a0a0f;
+  --card-bg: rgba(255,255,255,0.95);
+  --welcome-color: #f5d547;
+  --gossip-color: #7ecb6e;
+  --pics-color: #e8e8e8;
+  --parties-color: #e87cb0;
+  --links-color: #6eb8e0;
+  --sidebar-text: #c0bfb4;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  background: var(--bg);
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* ─── Bokeh city-lights background ─── */
+.bokeh-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: linear-gradient(180deg, #0c0c18 0%, #0a0a0f 40%, #05050a 100%);
+}
+
+.bokeh-bg .dot {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(var(--blur));
+  opacity: var(--opacity);
+  animation: drift var(--dur) ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(var(--dx), var(--dy)) scale(var(--scale-end)); }
+}
+
+/* ─── Layout ─── */
+.page {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 200px 1fr 90px;
+  grid-template-rows: auto 1fr;
+  gap: 0 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 20px 24px 40px;
+}
+
+/* ─── Title ─── */
+.title-area {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 24px 0 20px;
+}
+
+.title-area h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(52px, 8vw, 96px);
+  letter-spacing: 2px;
+  color: var(--gold);
+  text-shadow:
+    0 0 40px rgba(255,248,181,0.25),
+    0 0 80px rgba(255,232,0,0.10);
+  animation: titleGlow 4s ease-in-out infinite alternate;
+  line-height: 1;
+}
+
+@keyframes titleGlow {
+  0%   { text-shadow: 0 0 40px rgba(255,248,181,0.20), 0 0 80px rgba(255,232,0,0.06); }
+  100% { text-shadow: 0 0 60px rgba(255,248,181,0.40), 0 0 120px rgba(255,232,0,0.15); }
+}
+
+/* ─── Left sidebar ─── */
+.sidebar-left {
+  grid-column: 1;
+  padding-top: 10px;
+}
+
+.sidebar-left section {
+  margin-bottom: 28px;
+}
+
+.sidebar-left h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+.sidebar-left p, .sidebar-left .desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--sidebar-text);
+  font-family: Georgia, serif;
+}
+
+.sec-welcome h2 { color: var(--welcome-color); }
+.sec-gossip h2  { color: var(--gossip-color); }
+.sec-pics h2    { color: var(--pics-color); }
+.sec-parties h2 { color: var(--parties-color); }
+.sec-links h2   { color: var(--links-color); }
+
+.sec-links a {
+  color: var(--links-color);
+  text-decoration: underline;
+  font-size: 13px;
+  font-family: Georgia, serif;
+}
+
+/* ─── Center feed ─── */
+.feed {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 10px;
+  padding-bottom: 40px;
+}
+
+.feed-empty {
+  text-align: center;
+  color: var(--sidebar-text);
+  font-size: 15px;
+  font-style: italic;
+  padding: 60px 20px;
+  animation: fadeIn 1s ease;
+}
+
+/* ─── Post card ─── */
+.post-card {
+  background: var(--card-bg);
+  border-radius: 6px;
+  padding: 28px 26px 22px;
+  color: #1a1a1a;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+  animation: cardIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  position: relative;
+}
+
+.post-card .post-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 18px;
+  margin-bottom: 14px;
+  color: #333;
+}
+
+.post-card .post-body {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #222;
+  margin-bottom: 16px;
+}
+
+.post-card .post-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 14px;
+  animation: imgReveal 0.8s ease both;
+}
+
+@keyframes imgReveal {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.post-card .post-sig {
+  text-align: right;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #b8960c;
+  letter-spacing: 1px;
+}
+
+.post-card .post-meta {
+  font-size: 11px;
+  color: #999;
+  margin-top: 8px;
+  text-align: right;
+}
+
+@keyframes cardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ─── Right sidebar (nav circles) ─── */
+.sidebar-right {
+  grid-column: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding-top: 16px;
+}
+
+.nav-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,248,181,0.4);
+  background: radial-gradient(circle at 35% 35%, rgba(80,75,55,0.7), rgba(30,28,20,0.9));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-circle:hover {
+  border-color: var(--gold);
+  box-shadow: 0 0 16px rgba(255,248,181,0.3);
+  transform: scale(1.08);
+}
+
+.nav-circle span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: 0.5px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* ─── Typing indicator ─── */
+.typing-indicator {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 20px;
+  color: var(--gold);
+  font-style: italic;
+  font-size: 14px;
+}
+
+.typing-indicator.active {
+  display: flex;
+}
+
+.typing-dots span {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: typingBounce 1.4s ease-in-out infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* ─── Connection status ─── */
+.conn-status {
+  position: fixed;
+  bottom: 12px;
+  right: 16px;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-family: sans-serif;
+  z-index: 100;
+  transition: all 0.3s;
+}
+.conn-status.connected {
+  background: rgba(40,120,60,0.8);
+  color: #8f8;
+}
+.conn-status.disconnected {
+  background: rgba(120,40,40,0.8);
+  color: #f88;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── Mobile ─── */
+@media (max-width: 768px) {
+  .page {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    padding: 12px 16px;
+  }
+  .sidebar-left { grid-column: 1; display: flex; gap: 20px; flex-wrap: wrap; padding-bottom: 10px; border-bottom: 1px solid rgba(255,248,181,0.1); }
+  .sidebar-left section { margin-bottom: 8px; }
+  .sidebar-right { grid-column: 1; flex-direction: row; justify-content: center; order: -1; padding-bottom: 10px; }
+  .feed { grid-column: 1; }
+  .nav-circle { width: 50px; height: 50px; }
+  .nav-circle span { font-size: 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Bokeh background -->
+<div class="bokeh-bg" id="bokeh"></div>
+
+<div class="page">
+  <!-- Title -->
+  <div class="title-area">
+    <h1>gossip girl</h1>
+  </div>
+
+  <!-- Left sidebar -->
+  <nav class="sidebar-left">
+    <section class="sec-welcome">
+      <h2>welcome</h2>
+      <p class="desc">to Gossip Girl!<br>The Site ABOUT the Upper East Side, FOR the Upper East Side and BY the Upper East Side!</p>
+    </section>
+    <section class="sec-gossip">
+      <h2>gossip</h2>
+      <p class="desc">The latest "411" on all the in people.</p>
+    </section>
+    <section class="sec-pics">
+      <h2>pics</h2>
+      <p class="desc">See what the fashionistas of the UES are wearing.</p>
+    </section>
+    <section class="sec-parties">
+      <h2>parties</h2>
+      <p class="desc">Your invitation was probably lost in the mail. Check here to see what you missed.</p>
+    </section>
+    <section class="sec-links">
+      <h2>links</h2>
+      <p class="desc">Text your gossip to the number and see it here, live.</p>
+    </section>
+  </nav>
+
+  <!-- Feed -->
+  <main class="feed" id="feed">
+    <div class="typing-indicator" id="typing">
+      <div class="typing-dots"><span></span><span></span><span></span></div>
+      Gossip Girl is typing&hellip;
+    </div>
+    <div class="feed-empty" id="empty-msg">
+      Spotted: Nothing&hellip; yet. Text your gossip and watch the Upper East Side unfold.
+    </div>
+  </main>
+
+  <!-- Right sidebar -->
+  <aside class="sidebar-right">
+    <div class="nav-circle"><span>home</span></div>
+    <div class="nav-circle"><span>posts</span></div>
+    <div class="nav-circle"><span>pics</span></div>
+    <div class="nav-circle"><span>links</span></div>
+  </aside>
+</div>
+
+<div class="conn-status disconnected" id="conn">disconnected</div>
+
+<script>
+// ─── Bokeh dots ───
+(function initBokeh() {
+  const container = document.getElementById('bokeh');
+  const colors = [
+    '#ffe066','#ffb347','#ff6b6b','#74b9ff','#a29bfe',
+    '#55efc4','#fd79a8','#ffeaa7','#dfe6e9','#e17055',
+  ];
+  const count = 60;
+  for (let i = 0; i < count; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    const size = 4 + Math.random() * 20;
+    const blur = 2 + Math.random() * 12;
+    dot.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;top:${10+Math.random()*55}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      --blur:${blur}px;
+      --opacity:${0.15+Math.random()*0.45};
+      --dur:${4+Math.random()*8}s;
+      --dx:${-15+Math.random()*30}px;
+      --dy:${-10+Math.random()*20}px;
+      --scale-end:${0.7+Math.random()*0.6};
+      animation-delay:${-Math.random()*10}s;
+    `;
+    container.appendChild(dot);
+  }
+})();
+
+// ─── WebSocket ───
+const feed = document.getElementById('feed');
+const emptyMsg = document.getElementById('empty-msg');
+const typing = document.getElementById('typing');
+const connEl = document.getElementById('conn');
+
+let ws;
+let reconnectDelay = 1000;
+
+function timeAgo(iso) {
+  const d = new Date(iso);
+  const now = new Date();
+  const sec = Math.floor((now - d) / 1000);
+  if (sec < 60) return 'just now';
+  if (sec < 3600) return Math.floor(sec/60) + 'm ago';
+  if (sec < 86400) return Math.floor(sec/3600) + 'h ago';
+  return d.toLocaleDateString();
+}
+
+function createPostEl(post) {
+  const card = document.createElement('div');
+  card.className = 'post-card';
+
+  const lines = post.gossip.split('\n').filter(Boolean);
+  const titleText = lines.length > 1 ? lines[0] : 'Spotted:';
+  const bodyText = lines.length > 1 ? lines.slice(1).join(' ') : post.gossip;
+
+  const sigMatch = bodyText.match(/xo\s*xo[\s,]*gossip\s*girl\.?$/i);
+  let bodyClean = bodyText;
+  let sig = 'xo xo, Gossip Girl';
+  if (sigMatch) {
+    const idx = bodyText.lastIndexOf(sigMatch[0]);
+    sig = sigMatch[0].trim();
+    bodyClean = bodyText.slice(0, idx).trim();
+  }
+
+  const imgHtml = post.image
+    ? `<img class="post-image" src="${escHtml(post.image)}" alt="spotted" loading="lazy">`
+    : '';
+
+  card.innerHTML = `
+    <div class="post-title">${escHtml(titleText)}</div>
+    ${imgHtml}
+    <div class="post-body">${escHtml(bodyClean)}</div>
+    <div class="post-sig">${escHtml(sig)}</div>
+    <div class="post-meta">tip from ***${escHtml(post.from)} &middot; ${timeAgo(post.timestamp)}</div>
+  `;
+  return card;
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function addPost(post) {
+  if (emptyMsg) emptyMsg.style.display = 'none';
+  const el = createPostEl(post);
+  feed.insertBefore(el, typing.nextSibling);
+}
+
+function connect() {
+  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+  ws = new WebSocket(`${proto}://${location.host}/ws`);
+
+  ws.onopen = () => {
+    connEl.textContent = 'live';
+    connEl.className = 'conn-status connected';
+    reconnectDelay = 1000;
+  };
+
+  ws.onmessage = (e) => {
+    const post = JSON.parse(e.data);
+    addPost(post);
+  };
+
+  ws.onclose = () => {
+    connEl.textContent = 'disconnected';
+    connEl.className = 'conn-status disconnected';
+    setTimeout(connect, reconnectDelay);
+    reconnectDelay = Math.min(reconnectDelay * 2, 15000);
+  };
+
+  ws.onerror = () => ws.close();
+}
+
+// Load existing posts on page load, then connect WS
+fetch('/api/posts')
+  .then(r => r.json())
+  .then(posts => {
+    if (posts.length) {
+      emptyMsg.style.display = 'none';
+      posts.slice().reverse().forEach(p => addPost(p));
+    }
+    connect();
+  })
+  .catch(() => connect());
+</script>
+</body>
+</html>

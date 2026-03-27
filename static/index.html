@@ -120,12 +120,28 @@ html, body {
 .sec-pics h2    { color: var(--pics-color); }
 .sec-parties h2 { color: var(--parties-color); }
 .sec-links h2   { color: var(--links-color); }
+.sec-phone h2   { color: var(--gold-bright); }
 
 .sec-links a {
   color: var(--links-color);
   text-decoration: underline;
   font-size: 13px;
   font-family: Georgia, serif;
+}
+
+.phone-number {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--gold);
+  text-decoration: none;
+  letter-spacing: 1px;
+  margin-top: 6px;
+  transition: text-shadow 0.3s;
+}
+.phone-number:hover {
+  text-shadow: 0 0 12px rgba(255,248,181,0.5);
 }
 
 /* ─── Center feed ─── */
@@ -137,6 +153,9 @@ html, body {
   padding-top: 10px;
   padding-bottom: 40px;
 }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
 
 .feed-empty {
   text-align: center;
@@ -158,6 +177,8 @@ html, body {
   position: relative;
 }
 
+.post-card + .post-card { margin-top: 24px; }
+
 .post-card .post-title {
   font-family: 'Playfair Display', Georgia, serif;
   font-style: italic;
@@ -173,6 +194,9 @@ html, body {
   color: #222;
   margin-bottom: 16px;
 }
+
+.post-card .post-body p { margin-bottom: 10px; }
+.post-card .post-body p:last-child { margin-bottom: 0; }
 
 .post-card .post-image {
   width: 100%;
@@ -215,6 +239,62 @@ html, body {
   }
 }
 
+/* ─── Links tab ─── */
+.dev-links {
+  list-style: none;
+  margin-top: 10px;
+  padding: 0;
+}
+.dev-links li { margin-bottom: 8px; }
+.dev-links a {
+  color: #b8960c;
+  text-decoration: underline;
+  font-family: Georgia, serif;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+.dev-links a:hover { color: #d4aa0c; }
+
+.legal-text { margin-bottom: 12px; }
+
+.tc-link {
+  color: var(--links-color);
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: Georgia, serif;
+  font-size: 14px;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+/* ─── Pics gallery ─── */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+.gallery-item {
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--card-bg);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+  animation: cardIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.gallery-item img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+}
+.gallery-caption {
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #555;
+  font-family: Georgia, serif;
+  line-height: 1.4;
+}
+
 /* ─── Right sidebar (nav circles) ─── */
 .sidebar-right {
   grid-column: 3;
@@ -240,7 +320,7 @@ html, body {
   overflow: hidden;
 }
 
-.nav-circle:hover {
+.nav-circle:hover, .nav-circle.active {
   border-color: var(--gold);
   box-shadow: 0 0 16px rgba(255,248,181,0.3);
   transform: scale(1.08);
@@ -307,6 +387,103 @@ html, body {
   color: #f88;
 }
 
+/* ─── Terms modal ─── */
+.terms-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.5s ease;
+}
+.terms-overlay.hidden { display: none; }
+
+.terms-modal {
+  background: #1a1a1f;
+  border: 1px solid rgba(255,248,181,0.3);
+  border-radius: 8px;
+  max-width: 540px;
+  width: 90%;
+  max-height: 85vh;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 0 60px rgba(255,248,181,0.08);
+}
+.terms-modal h2 {
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--gold);
+  font-size: 28px;
+  text-align: center;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+.terms-subtitle {
+  text-align: center;
+  color: var(--sidebar-text);
+  font-size: 14px;
+  font-family: Georgia, serif;
+  line-height: 1.5;
+}
+.terms-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,248,181,0.08);
+  border-radius: 4px;
+  padding: 18px 16px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #999;
+  font-family: Georgia, serif;
+}
+.terms-scroll h3 {
+  color: var(--sidebar-text);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  margin: 14px 0 6px;
+  font-weight: 600;
+}
+.terms-scroll h3:first-child { margin-top: 0; }
+.terms-scroll p { margin-bottom: 8px; }
+
+.terms-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--sidebar-text);
+  cursor: pointer;
+  font-family: Georgia, serif;
+}
+.terms-checkbox input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--gold-bright);
+  cursor: pointer;
+}
+.terms-btn {
+  background: var(--gold);
+  color: #0a0a0f;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 4px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: opacity 0.3s, transform 0.2s;
+}
+.terms-btn:hover:not(:disabled) { transform: scale(1.02); }
+.terms-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -316,15 +493,70 @@ html, body {
 @media (max-width: 768px) {
   .page {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    padding: 12px 16px;
+    grid-template-rows: auto auto 1fr;
+    padding: 12px 16px 20px;
+    gap: 0;
   }
-  .sidebar-left { grid-column: 1; display: flex; gap: 20px; flex-wrap: wrap; padding-bottom: 10px; border-bottom: 1px solid rgba(255,248,181,0.1); }
-  .sidebar-left section { margin-bottom: 8px; }
-  .sidebar-right { grid-column: 1; flex-direction: row; justify-content: center; order: -1; padding-bottom: 10px; }
-  .feed { grid-column: 1; }
-  .nav-circle { width: 50px; height: 50px; }
+
+  .title-area { padding: 16px 0 12px; }
+
+  .sidebar-left {
+    grid-column: 1;
+    display: block;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255,248,181,0.1);
+    margin-bottom: 8px;
+  }
+  .sidebar-left section { margin-bottom: 10px; }
+  .sidebar-left .desc { display: none; }
+  .sidebar-left .sec-phone .desc { display: block; }
+
+  .sidebar-right {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    background: rgba(10, 10, 15, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255, 248, 181, 0.15);
+    padding: 10px 0 max(10px, env(safe-area-inset-bottom));
+    z-index: 500;
+    gap: 0;
+  }
+  .nav-circle { width: 48px; height: 48px; }
+  .nav-circle:hover, .nav-circle.active { transform: scale(1.05); }
   .nav-circle span { font-size: 10px; }
+
+  .feed {
+    grid-column: 1;
+    padding-bottom: 90px;
+  }
+
+  .post-card { padding: 20px 18px 16px; }
+
+  .conn-status { bottom: 74px; }
+
+  .terms-modal {
+    width: 95%;
+    max-height: 90vh;
+    padding: 24px 20px;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .title-area h1 { font-size: 36px; }
+  .sidebar-left { display: none; }
+  .nav-circle { width: 44px; height: 44px; }
+  .nav-circle span { font-size: 9px; }
 }
 </style>
 </head>
@@ -345,6 +577,11 @@ html, body {
       <h2>welcome</h2>
       <p class="desc">to Gossip Girl!<br>The Site ABOUT the Upper East Side, FOR the Upper East Side and BY the Upper East Side!</p>
     </section>
+    <section class="sec-phone">
+      <h2>send tips</h2>
+      <p class="desc">Text your gossip to:</p>
+      <a href="sms:+19253975046" class="phone-number">+1 (925) 397-5046</a>
+    </section>
     <section class="sec-gossip">
       <h2>gossip</h2>
       <p class="desc">The latest "411" on all the in people.</p>
@@ -359,33 +596,157 @@ html, body {
     </section>
     <section class="sec-links">
       <h2>links</h2>
-      <p class="desc">Text your gossip to the number and see it here, live.</p>
+      <p class="desc">Legal info, credits &amp; more.</p>
     </section>
   </nav>
 
   <!-- Feed -->
   <main class="feed" id="feed">
-    <div class="typing-indicator" id="typing">
-      <div class="typing-dots"><span></span><span></span><span></span></div>
-      Gossip Girl is typing&hellip;
+    <!-- TAB: HOME / POSTS -->
+    <div class="tab-content active" id="tab-home">
+      <div class="typing-indicator" id="typing">
+        <div class="typing-dots"><span></span><span></span><span></span></div>
+        Gossip Girl is typing&hellip;
+      </div>
+      <div class="feed-empty" id="empty-msg">
+        Spotted: Nothing&hellip; yet. Text your gossip and watch the Upper East Side unfold.
+      </div>
     </div>
-    <div class="feed-empty" id="empty-msg">
-      Spotted: Nothing&hellip; yet. Text your gossip and watch the Upper East Side unfold.
+
+    <!-- TAB: PICS -->
+    <div class="tab-content" id="tab-pics">
+      <div class="feed-empty" id="pics-empty">No photos from the Upper East Side&hellip; yet.</div>
+    </div>
+
+    <!-- TAB: LINKS -->
+    <div class="tab-content" id="tab-links">
+      <div class="post-card">
+        <div class="post-title">Legal Disclaimer</div>
+        <div class="post-body">
+          <p class="legal-text">This website is a fan-made project created solely for entertainment and educational purposes. "Gossip Girl" is a trademark of Alloy Entertainment, Warner Bros. Television, and The CW Network. This site is not affiliated with, endorsed by, or connected to the Gossip Girl franchise, its creators, networks, or any related entities in any way.</p>
+          <p class="legal-text">All content submitted via text message is entirely user-generated. The developer and operator of this site assumes absolutely no responsibility for the accuracy, legality, appropriateness, or consequences of any content posted through this service. Users submit content at their own risk.</p>
+          <p class="legal-text">This site processes text messages through AI language models for entertainment transformation only. No personal data is stored permanently. Phone numbers are anonymized in all public displays.</p>
+          <p class="legal-text">This service is provided "AS IS" and "AS AVAILABLE" without warranties of any kind, either express or implied, including but not limited to implied warranties of merchantability, fitness for a particular purpose, and non-infringement.</p>
+          <p class="legal-text">The developer shall not be held liable for any direct, indirect, incidental, special, consequential, or exemplary damages resulting from the use or inability to use this service.</p>
+          <p><button class="tc-link" id="links-view-tc">View Full Terms &amp; Conditions</button></p>
+        </div>
+        <div class="post-sig">you know you love me, xo xo</div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-title">The One Behind the Curtain</div>
+        <div class="post-body">
+          <p>Every scandal needs its architect. This one was crafted by <strong>Sarthak Sethi</strong>.</p>
+          <ul class="dev-links">
+            <li><a href="https://sarthak.lol" target="_blank" rel="noopener">sarthak.lol</a> &mdash; personal site</li>
+            <li><a href="https://cal.com/sxthak" target="_blank" rel="noopener">cal.com/sxthak</a> &mdash; book a meeting</li>
+            <li><a href="mailto:sarthakluv@gmail.com">sarthakluv@gmail.com</a> &mdash; email</li>
+            <li><a href="https://linkedin.com/in/sarsethi" target="_blank" rel="noopener">linkedin.com/in/sarsethi</a> &mdash; LinkedIn</li>
+            <li><a href="https://github.com/1300Sarthak" target="_blank" rel="noopener">github.com/1300Sarthak</a> &mdash; GitHub</li>
+          </ul>
+        </div>
+        <div class="post-sig">every gossip site needs its creator</div>
+      </div>
     </div>
   </main>
 
   <!-- Right sidebar -->
   <aside class="sidebar-right">
-    <div class="nav-circle"><span>home</span></div>
-    <div class="nav-circle"><span>posts</span></div>
-    <div class="nav-circle"><span>pics</span></div>
-    <div class="nav-circle"><span>links</span></div>
+    <div class="nav-circle active" data-tab="home"><span>home</span></div>
+    <div class="nav-circle" data-tab="posts"><span>posts</span></div>
+    <div class="nav-circle" data-tab="pics"><span>pics</span></div>
+    <div class="nav-circle" data-tab="links"><span>links</span></div>
   </aside>
 </div>
 
 <div class="conn-status disconnected" id="conn">disconnected</div>
 
+<!-- Terms & Conditions Modal -->
+<div class="terms-overlay" id="terms-overlay">
+  <div class="terms-modal">
+    <h2>gossip girl</h2>
+    <p class="terms-subtitle">Before you step onto the Upper East Side, we need your agreement to a few ground rules. Even Blair Waldorf plays by <em>some</em> rules.</p>
+    <div class="terms-scroll">
+      <h3>1. Acceptance of Terms</h3>
+      <p>By accessing and using this website ("Gossip Girl" or "the Service"), you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions. If you do not agree, you must exit the site immediately.</p>
+
+      <h3>2. Nature of the Service</h3>
+      <p>This website is an independently created fan project for entertainment and educational purposes only. It is not an official Gossip Girl product. The site uses AI technology to transform user-submitted text messages into entertainment content styled after the fictional "Gossip Girl" character.</p>
+
+      <h3>3. No Affiliation</h3>
+      <p>This site is not affiliated with, authorized by, endorsed by, or in any way officially connected with Alloy Entertainment, Warner Bros. Television, The CW Network, HBO Max, or any of their subsidiaries or affiliates. All trademarks belong to their respective owners.</p>
+
+      <h3>4. User-Generated Content</h3>
+      <p>You are solely responsible for any content you submit to this service via text message or any other means. By submitting content, you represent and warrant that: (a) you have the right to submit such content; (b) the content does not violate any law or regulation; (c) the content does not infringe upon the rights of any third party; (d) the content is not defamatory, obscene, threatening, or otherwise objectionable.</p>
+
+      <h3>5. Public Display</h3>
+      <p>You understand and agree that any content you submit may be transformed by AI and displayed publicly on this website. While phone numbers are partially anonymized, you acknowledge that submitted content becomes publicly visible. Do not submit content you wish to remain private.</p>
+
+      <h3>6. No Guarantee of Privacy</h3>
+      <p>While we take reasonable steps to anonymize sender information, we cannot guarantee complete anonymity. Text messages are processed through third-party services (Twilio, AI providers). By using this service, you consent to this processing.</p>
+
+      <h3>7. Disclaimer of Warranties</h3>
+      <p>THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED. THE DEVELOPER MAKES NO WARRANTY THAT THE SERVICE WILL BE UNINTERRUPTED, TIMELY, SECURE, OR ERROR-FREE.</p>
+
+      <h3>8. Limitation of Liability</h3>
+      <p>IN NO EVENT SHALL THE DEVELOPER, SARTHAK SETHI, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR EXEMPLARY DAMAGES, INCLUDING BUT NOT LIMITED TO DAMAGES FOR LOSS OF PROFITS, GOODWILL, DATA, OR OTHER INTANGIBLE LOSSES, RESULTING FROM: (a) USE OR INABILITY TO USE THE SERVICE; (b) ANY CONTENT OBTAINED FROM THE SERVICE; (c) UNAUTHORIZED ACCESS TO YOUR TRANSMISSIONS OR DATA; (d) ANY OTHER MATTER RELATING TO THE SERVICE.</p>
+
+      <h3>9. Indemnification</h3>
+      <p>You agree to indemnify, defend, and hold harmless the developer from and against any and all claims, damages, obligations, losses, liabilities, costs, and expenses arising from: (a) your use of the Service; (b) your violation of these Terms; (c) your violation of any third-party right; (d) any content you submit to the Service.</p>
+
+      <h3>10. Content Moderation</h3>
+      <p>The developer reserves the right, but has no obligation, to monitor, edit, or remove any content at any time and for any reason without notice. The developer may also terminate access to the Service for any user at any time.</p>
+
+      <h3>11. Modifications</h3>
+      <p>The developer reserves the right to modify these Terms at any time. Continued use of the Service after changes constitutes acceptance of the modified Terms.</p>
+
+      <h3>12. Governing Law</h3>
+      <p>These Terms shall be governed by and construed in accordance with the laws of the State of California, United States, without regard to its conflict of law provisions.</p>
+
+      <h3>13. Contact</h3>
+      <p>For questions regarding these Terms, contact: sarthakluv@gmail.com</p>
+    </div>
+    <label class="terms-checkbox">
+      <input type="checkbox" id="terms-check">
+      I have read and agree to the Terms &amp; Conditions
+    </label>
+    <button class="terms-btn" id="terms-agree" disabled>Enter the Upper East Side</button>
+  </div>
+</div>
+
 <script>
+// ─── Terms & Conditions ───
+(function initTerms() {
+  var overlay = document.getElementById('terms-overlay');
+  var checkbox = document.getElementById('terms-check');
+  var btn = document.getElementById('terms-agree');
+
+  try {
+    if (localStorage.getItem('gg_terms_accepted')) {
+      overlay.classList.add('hidden');
+    }
+  } catch(e) { /* private browsing */ }
+
+  checkbox.addEventListener('change', function() {
+    btn.disabled = !this.checked;
+  });
+
+  btn.addEventListener('click', function() {
+    if (checkbox.checked) {
+      try { localStorage.setItem('gg_terms_accepted', 'true'); } catch(e) {}
+      overlay.classList.add('hidden');
+    }
+  });
+
+  // Reopen from links tab
+  document.getElementById('links-view-tc').addEventListener('click', function(e) {
+    e.preventDefault();
+    overlay.classList.remove('hidden');
+    checkbox.checked = false;
+    btn.disabled = true;
+  });
+})();
+
 // ─── Bokeh dots ───
 (function initBokeh() {
   const container = document.getElementById('bokeh');
@@ -415,14 +776,36 @@ html, body {
   }
 })();
 
-// ─── WebSocket ───
-const feed = document.getElementById('feed');
+// ─── Tab Navigation ───
+const TAB_MAP = { home: 'tab-home', posts: 'tab-home', pics: 'tab-pics', links: 'tab-links' };
+const navCircles = document.querySelectorAll('.nav-circle');
+const tabPanels = document.querySelectorAll('.tab-content');
+
+navCircles.forEach(function(circle) {
+  circle.addEventListener('click', function() {
+    var tab = this.dataset.tab;
+    // Deactivate all
+    navCircles.forEach(function(c) { c.classList.remove('active'); });
+    tabPanels.forEach(function(t) { t.classList.remove('active'); });
+    // Activate clicked circle
+    this.classList.add('active');
+    // Show target panel
+    document.getElementById(TAB_MAP[tab]).classList.add('active');
+    // For pics tab, rebuild gallery
+    if (tab === 'pics') rebuildGallery();
+  });
+});
+
+// ─── WebSocket & Posts ───
+const homeTab = document.getElementById('tab-home');
 const emptyMsg = document.getElementById('empty-msg');
+const picsEmpty = document.getElementById('pics-empty');
 const typing = document.getElementById('typing');
 const connEl = document.getElementById('conn');
 
 let ws;
 let reconnectDelay = 1000;
+let allPosts = [];
 
 function timeAgo(iso) {
   const d = new Date(iso);
@@ -452,16 +835,15 @@ function createPostEl(post) {
   }
 
   const imgHtml = post.image
-    ? `<img class="post-image" src="${escHtml(post.image)}" alt="spotted" loading="lazy">`
+    ? '<img class="post-image" src="' + escHtml(post.image) + '" alt="spotted" loading="lazy">'
     : '';
 
-  card.innerHTML = `
-    <div class="post-title">${escHtml(titleText)}</div>
-    ${imgHtml}
-    <div class="post-body">${escHtml(bodyClean)}</div>
-    <div class="post-sig">${escHtml(sig)}</div>
-    <div class="post-meta">tip from ***${escHtml(post.from)} &middot; ${timeAgo(post.timestamp)}</div>
-  `;
+  card.innerHTML =
+    '<div class="post-title">' + escHtml(titleText) + '</div>' +
+    imgHtml +
+    '<div class="post-body">' + escHtml(bodyClean) + '</div>' +
+    '<div class="post-sig">' + escHtml(sig) + '</div>' +
+    '<div class="post-meta">tip from ***' + escHtml(post.from) + ' &middot; ' + timeAgo(post.timestamp) + '</div>';
   return card;
 }
 
@@ -472,47 +854,72 @@ function escHtml(s) {
 }
 
 function addPost(post) {
+  allPosts.push(post);
   if (emptyMsg) emptyMsg.style.display = 'none';
   const el = createPostEl(post);
-  feed.insertBefore(el, typing.nextSibling);
+  homeTab.insertBefore(el, typing.nextSibling);
+  // If currently on pics tab and post has image, refresh gallery
+  var activeTab = document.querySelector('.tab-content.active');
+  if (activeTab && activeTab.id === 'tab-pics' && post.image) {
+    rebuildGallery();
+  }
+}
+
+function rebuildGallery() {
+  var container = document.getElementById('tab-pics');
+  var imagePosts = allPosts.filter(function(p) { return p.image; });
+  if (!imagePosts.length) {
+    container.innerHTML = '<div class="feed-empty">No photos from the Upper East Side&hellip; yet.</div>';
+    return;
+  }
+  var html = '<div class="gallery-grid">';
+  imagePosts.slice().reverse().forEach(function(p) {
+    var caption = p.gossip.length > 100 ? p.gossip.slice(0, 100) + '...' : p.gossip;
+    html += '<div class="gallery-item">' +
+      '<img src="' + escHtml(p.image) + '" alt="spotted" loading="lazy">' +
+      '<div class="gallery-caption">' + escHtml(caption) + '</div>' +
+      '</div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
 }
 
 function connect() {
   const proto = location.protocol === 'https:' ? 'wss' : 'ws';
-  ws = new WebSocket(`${proto}://${location.host}/ws`);
+  ws = new WebSocket(proto + '://' + location.host + '/ws');
 
-  ws.onopen = () => {
+  ws.onopen = function() {
     connEl.textContent = 'live';
     connEl.className = 'conn-status connected';
     reconnectDelay = 1000;
   };
 
-  ws.onmessage = (e) => {
+  ws.onmessage = function(e) {
     const post = JSON.parse(e.data);
     addPost(post);
   };
 
-  ws.onclose = () => {
+  ws.onclose = function() {
     connEl.textContent = 'disconnected';
     connEl.className = 'conn-status disconnected';
     setTimeout(connect, reconnectDelay);
     reconnectDelay = Math.min(reconnectDelay * 2, 15000);
   };
 
-  ws.onerror = () => ws.close();
+  ws.onerror = function() { ws.close(); };
 }
 
 // Load existing posts on page load, then connect WS
 fetch('/api/posts')
-  .then(r => r.json())
-  .then(posts => {
+  .then(function(r) { return r.json(); })
+  .then(function(posts) {
     if (posts.length) {
       emptyMsg.style.display = 'none';
-      posts.slice().reverse().forEach(p => addPost(p));
+      posts.slice().reverse().forEach(function(p) { addPost(p); });
     }
     connect();
   })
-  .catch(() => connect());
+  .catch(function() { connect(); });
 </script>
 </body>
 </html>
